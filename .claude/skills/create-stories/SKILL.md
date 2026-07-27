@@ -100,6 +100,10 @@ For each story, determine:
   - **No ADR applies at all**: Write `ADR: N/A — [brief reason, e.g. "pure data configuration, no architectural pattern required"]` in the story's ADR field. Do NOT leave the field blank — a blank ADR field means "not checked", not "not applicable".
 - **Story Type**: from Step 3 classification
 - **Engine risk**: from the ADR's Knowledge Risk field
+- **Performance note**: determine whether this story touches the per-frame gameplay loop, rendering, or physics — check the GDD's Layer and Detailed Rules/Formulas sections for the acceptance criteria this story covers.
+  - If it does NOT (most Foundation-layer Logic/Integration/Config-Data stories): write `N/A — not part of the per-frame gameplay loop; [one clause tying this to what the story actually does, e.g. "a single Array[String] membership check on a Foundation-layer record"]`.
+  - If it DOES touch the gameplay loop, rendering, or physics: state the specific frame/memory budget this story must respect (pull from `.claude/docs/technical-preferences.md`'s Performance Budgets section), or `[fill before sprint planning — specify frame budget impact]` if the budget genuinely isn't knowable yet.
+  - Never leave this field absent. An absent Performance field is a confirmed, recurring `/story-readiness` NEEDS WORK gap (Sprint 1 retrospective, 2026-07-20 — hit 7 of 8 Must Have stories that sprint, and 3 of 5 in Sprint 2 before this fix).
 
 ---
 
@@ -203,6 +207,7 @@ For each story, write `production/epics/[epic-slug]/story-[NNN]-[slug].md`:
 
 **Engine**: [name + version] | **Risk**: [LOW / MEDIUM / HIGH]
 **Engine Notes**: [from ADR Engine Compatibility section — post-cutoff APIs, verification required]
+**Performance**: [N/A note with a one-clause reason, or a specific frame/memory budget — see Step 4's Performance note guidance. Never leave this field absent.]
 
 **Control Manifest Rules (this layer)**:
 - Required: [relevant required pattern]

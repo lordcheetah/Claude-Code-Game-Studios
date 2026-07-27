@@ -108,7 +108,7 @@ For `update`:
 3. Ask the user what to change: stories to add, remove, reprioritize, or re-estimate. Use `AskUserQuestion` to gather changes.
 4. Apply the changes and re-present the full revised plan for review.
 5. Re-run the producer feasibility gate (Phase 4) on the revised plan.
-6. Write the updated markdown plan and yaml together (same approval as `new` mode).
+6. Write the updated markdown plan and yaml together (same approval as `new` mode), including the same story-file estimate back-write described in Phase 4 for any story that's new to this sprint or had its estimate revised.
 
 Note: `update` mode does not reset story statuses. Stories already marked `in-progress` or `done` keep their status. Only `backlog` and `ready-for-dev` stories can be removed or reprioritized freely.
 
@@ -225,6 +225,8 @@ If [B]: revise the story list, re-present the updated plan, then proceed to writ
 If [C]: adjust sprint dates and capacity, re-present the updated plan, then proceed to write approval.
 
 After handling the producer's verdict, ask: "May I write the sprint plan to `production/sprints/sprint-[N].md` and `production/sprint-status.yaml`?" If yes, write both files (creating directories as needed). Verdict: **COMPLETE** — sprint plan and status file created. If no: Verdict: **BLOCKED** — user declined write.
+
+**Write estimates back into story files**: For every story in the Must Have / Should Have / Nice to Have task tables that has a real story file (i.e., not a non-story task like an ADR-writing task), check that story file's `Estimate:` header field. If it still reads a placeholder (e.g. `[fill before sprint planning]`) or differs from the `Est. Days` value just assigned in this sprint's task table, update the story file's `Estimate:` field to match. This closes the loop at the only point the actual value becomes known — `/create-stories` cannot know it at story-creation time, and leaving it as a placeholder is what `/story-readiness` has repeatedly had to catch as a NEEDS WORK gap (Sprint 1 retrospective, 2026-07-20, Action Item #1). Do this silently as part of the same write approval already granted above — no separate ask needed, since it's a direct, mechanical consequence of the sprint plan being written.
 
 After writing, add:
 
