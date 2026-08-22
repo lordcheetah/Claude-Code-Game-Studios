@@ -156,6 +156,21 @@ handle.Completed += OnAssetLoaded;
 - Loading individual assets in a loop instead of batch loading with labels
 - Not preloading during loading screens (first-frame hitches in gameplay)
 
+## Tooling — Unity CLI
+
+The `unity` CLI can run this project's tests (`unity test`) and drive a live Editor
+(`unity status`, `unity command`) from the terminal. Use it instead of asking the user
+to click through the Editor.
+
+Invoke the `unity-cli` skill for command syntax — it is Unity-maintained and versioned
+with the CLI, which is *experimental* and still changing. Install it with
+`unity skill install claude-code --local`. Do not recite flags from memory.
+
+Read-only calls (`unity status`, `unity list`, `--help`, `--dry-run`) need no approval.
+`unity command` executes code in the live Editor and can mutate scenes and assets —
+treat it as a file write and get approval first. Never run `unity install`/`uninstall`/
+`upgrade` without explicit user sign-off.
+
 ## Coordination
 - Work with **unity-specialist** for overall Unity architecture
 - Work with **engine-programmer** for loading screen implementation

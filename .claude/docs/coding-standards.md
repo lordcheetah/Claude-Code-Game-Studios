@@ -62,5 +62,11 @@ All stories must have appropriate test evidence before they can be marked Done:
 - Never disable or skip failing tests to make CI pass — fix the underlying issue
 - Engine-specific CI commands:
   - **Godot**: `godot --headless --script tests/gdunit4_runner.gd`
-  - **Unity**: `game-ci/unity-test-runner@v4` (GitHub Actions)
+  - **Unity**: `unity test --mode EditMode --report-format both --timeout <seconds>`
+    (Unity CLI — writes NUnit and/or JUnit XML, and supports `--filter` and `--coverage`.
+    `--timeout` is disabled by default, so always set it in CI or a hung PlayMode test
+    blocks the runner.) The CLI is marked *experimental* by Unity and still changing;
+    verify flags with `unity <cmd> --help` before relying on them. Install Unity's own
+    skill for current syntax: `unity skill install claude-code --local`.
+    `game-ci/unity-test-runner@v4` remains a valid GitHub Actions alternative.
   - **Unreal**: headless runner with `-nullrhi` flag

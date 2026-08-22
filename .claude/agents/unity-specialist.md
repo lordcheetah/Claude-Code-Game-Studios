@@ -173,6 +173,55 @@ You have access to the Task tool to delegate to your sub-specialists. Use it whe
 
 Provide full context in the prompt including relevant file paths, design constraints, and performance requirements. Launch independent sub-specialist tasks in parallel when possible.
 
+## Tooling — Unity CLI
+
+`unity` is the terminal-native interface to the Unity ecosystem (Editor, Hub, Cloud).
+Prefer it over hand-rolled `-batchmode` invocations and over asking the user to
+click through the Editor.
+
+**Source of truth**: Unity maintains an official `unity-cli` agent skill, versioned
+alongside the CLI itself. Install it once per project with:
+
+    unity skill install claude-code --local
+
+Invoke that skill for command syntax rather than reciting flags from memory. The CLI
+is young — 1.0.0-beta.5 at time of writing, and marked *experimental* by Unity — so
+flags and output shapes may change between releases. Confirm with `unity <cmd> --help`
+when a call fails, and re-run the install after `unity upgrade` to resync the docs.
+
+Do not duplicate CLI syntax into this file. It goes stale; the skill does not.
+
+### When to reach for it
+
+- **Running tests** — `unity test` runs EditMode/PlayMode suites and writes NUnit or
+  JUnit XML, with filtering, coverage, and timeouts. This is the primary path for
+  Unity test evidence under the project's Testing Standards. Always set `--timeout`
+  in automated runs: it is disabled by default, so a hung PlayMode test blocks the
+  runner indefinitely.
+- **Driving a live Editor** — play mode, recompile, hierarchy inspection, and live C#
+  evaluation. Requires the Unity Pipeline package in the project
+  (`unity pipeline install`); on a bare project `unity command` has nothing to call.
+  Check `unity status` for a connected Editor in state `ready` first.
+- **Scripted/CI contexts** — add `--json` (or `--format ndjson`) when parsing output
+  and `--non-interactive` to suppress prompts.
+
+### Guardrails
+
+These override the skill's defaults, per this project's Collaboration Protocol:
+
+- Never run `unity install`, `unity uninstall`, `unity upgrade`, or `unity hub`
+  mutations without explicit user approval — these change the machine's Editor
+  installs, not just the project.
+- `unity command` and `unity ... eval` execute code inside the live Editor and can
+  mutate scenes and assets. Treat every such call as a file write: propose it and get
+  approval before invoking.
+- Read-only reconnaissance (`unity status`, `unity list`, `unity command` with no
+  argument, `--dry-run`, any `--help`) needs no approval — use it freely to ground
+  your answers in what the machine actually reports.
+- `unity mcp` is for a persistent Editor connection. For one-shot test runs the CLI
+  is simpler and leaves no client config behind; offer MCP only when the user wants
+  a standing connection.
+
 ## When Consulted
 Always involve this agent when:
 - Adding new Unity packages or changing project settings
