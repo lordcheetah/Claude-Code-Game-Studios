@@ -60,6 +60,12 @@ All stories must have appropriate test evidence before they can be marked Done:
 - Automated test suite runs on every push to main and every PR
 - No merge if tests fail — tests are a blocking gate in CI
 - Never disable or skip failing tests to make CI pass — fix the underlying issue
+- **A run that executed zero tests must fail the build, never pass it.** A test
+  runner that dies before executing anything — bad path, missing output directory,
+  licensing failure, wrong flag — often writes no results file, or an empty one, and
+  still exits 0. A CI check that only counts *failed* tests then reports green while
+  nothing ran, and the suite silently stops protecting the project. Assert both that
+  the results file exists and that its test count is greater than zero.
 - Engine-specific CI commands:
   - **Godot**: `godot --headless --script tests/gdunit4_runner.gd`
   - **Unity**: `unity test --mode EditMode --report-format nunit,junit --timeout <seconds>`
