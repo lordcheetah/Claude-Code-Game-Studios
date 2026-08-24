@@ -76,5 +76,20 @@ All stories must have appropriate test evidence before they can be marked Done:
     with exit 2. The CLI is marked *experimental* by Unity and still changing — treat
     Unity's own skill as the syntax source of truth over `--help`, and install it with
     `unity skill install claude-code --local`.
-    `game-ci/unity-test-runner@v4` remains a valid GitHub Actions alternative.
+
+    **`unity test` presumes a machine whose Unity license is already active — it does not
+    provision one.** On an ephemeral runner (GitHub-hosted, container, any fresh VM) holding
+    only a Unity **Personal** license, every activation mode is closed: `--file` posts the
+    .ulf to the licensing service and is rejected on hardware binding ("Machine bindings
+    don't match"), `--personal` requires an interactive sign-in, `--serial` needs a serial
+    Personal has none of, `--floating` needs a Pro/Enterprise license server, and Unity's
+    licensing backend refuses service-account tokens for activation. Established 2026-08-24
+    over five consecutive runner attempts on a real project, not inferred.
+
+    So pick the runner to match the license: a **self-hosted** runner executing as a user
+    account already signed in to Unity Hub needs no activation at all and is where
+    `unity test` shines; a **hosted** runner on Personal should use
+    `game-ci/unity-test-runner@v4`, which randomizes the machine ID and activates through the
+    editor binary rather than the licensing endpoint. Switching a green game-ci pipeline to
+    `unity test` without a self-hosted runner will break it.
   - **Unreal**: headless runner with `-nullrhi` flag
